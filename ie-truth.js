@@ -7,6 +7,13 @@ function IeVersion() {
 		CompatibilityMode: false
 	};
 
+        //Try to find the Edge version number
+	var edge = navigator.userAgent.match(/Edge\/(\d+)/);
+	if (edge) {
+		value.IsIE = true;
+		value.TrueVersion = parseInt(edge[1], 10);
+	}
+
 	//Try to find the Trident version number
 	var trident = navigator.userAgent.match(/Trident\/(\d+)/);
 	if (trident) {
@@ -31,5 +38,8 @@ function IeVersion() {
 		//In compatibility mode if the trident number doesn't match up with the MSIE number
 		value.CompatibilityMode = value.TrueVersion != value.ActingVersion;
 	}
+	
+	if(value.IsIE) value.CompatibilityMode = value.CompatibilityMode || !!navigator.userAgent.match(/compatible;/); // detect compatibility mode force in Edge Browser
+	
 	return value;
 }
